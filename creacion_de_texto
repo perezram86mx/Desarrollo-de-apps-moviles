@@ -1,0 +1,73 @@
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.graphics.Color
+
+@Composable
+fun TextStylesDemo() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Text("Por favor, ingrese su contraseña")
+
+        Text(
+            "Bienvenido a nuestra app",
+            fontWeight = FontWeight.Bold
+        )
+
+        Text(
+            "Bienvenido a nuestra app",
+            fontStyle = FontStyle.Italic
+        )
+
+        Text(
+            "Bienvenido a nuestra app",
+            fontSize = 24.sp
+        )
+
+        Text(
+            "Bienvenido a nuestra app",
+            color = Color.Magenta
+        )
+
+        Text(
+            "Bienvenido a nuestra app",
+            textDecoration = TextDecoration.Underline,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Text(
+            "Bienvenido a nuestra app",
+            fontFamily = FontFamily.Monospace
+        )
+
+        Text(
+            "Bienvenido a nuestra app",
+            fontWeight = FontWeight.Bold,
+            fontStyle = FontStyle.Italic,
+            color = Color.Blue
+        )
+
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TextStylesDemoPreview() {
+    MaterialTheme {
+        TextStylesDemo()
+    }
+}
