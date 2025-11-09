@@ -1,0 +1,150 @@
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
+import android.util.Patterns
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SimpleForm() {
+    // State variables
+    var name by remember { mutableStateOf(TextFieldValue("")) }
+    var email by remember { mutableStateOf(TextFieldValue("")) }
+    var password by remember { mutableStateOf(TextFieldValue("")) }
+    var age by remember { mutableStateOf(TextFieldValue("")) }
+
+    var isEmailValid by remember { mutableStateOf(true) }
+    var isPasswordValid by remember { mutableStateOf(true) }
+    var isAgeValid by remember { mutableStateOf(true) }
+
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    // Password rule: min 6 characters
+    val passwordRegex = Regex(".{6,}")
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+     //Solicita
+            OutlinedTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("Ingrese su nombre") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+
+            // ✉️ Email
+            OutlinedTextField(
+                value = email,
+                onValueChange = {
+                    email = it
+                    isEmailValid = Patterns.EMAIL_ADDRESS.matcher(it.text).matches()
+                },
+                label = { Text("Enter your email") },
+                isError = !isEmailValid,
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            if (!isEmailValid && email.text.isNotEmpty()) {
+                Text(
+                    text = "Invalid email address",
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+
+            // Password
+            OutlinedTextField(
+                value = password,
+                onValueChange = {
+                    password = it
+                    isPasswordValid = passwordRegex.matches(it.text)
+                },
+                label = { Text("Enter your password") },
+                isError = !isPasswordValid,
+                visualTransformation = PasswordVisualTransformation(),
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            if (!isPasswordValid && password.text.isNotEmpty()) {
+                Text(
+                    text = "Password must be at least 6 characters",
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+
+            // Age
+            OutlinedTextField(
+                value = age,
+                onValueChange = {
+                    age = it
+                    isAgeValid = it.text.toIntOrNull()?.let { n -> n in 1..120 } ?: false
+                },
+                label = { Text("Enter your age") },
+                isError = !isAgeValid && age.text.isNotEmpty(),
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            if (!isAgeValid && age.text.isNotEmpty()) {
+                Text(
+                    text = "Please enter a valid age (1–120)",
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+
+            // Submit button
+            Button(
+                onClick = {
+                    scope.launch {
+                        snackbarHostState.showSnackbar("Submitted: ${name.text}, ${email.text}, age ${age.text}")
+                    }
+                },
+                enabled = name.text.isNotEmpty() && isEmailValid && isPasswordValid && isAgeValid,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+            ) {
+                Text("Submit")
+            }
+
+            // Greeting
+            if (name.text.isNotEmpty()) {
+                Text(
+                    text = "Hello, ${name.text}! You’re ${age.text.ifEmpty { "?" }} years old.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SimpleFormPreview() {
+    MaterialTheme {
+        SimpleForm()
+    }
+}
