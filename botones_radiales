@@ -1,0 +1,71 @@
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+
+@Composable
+fun RadioButtonGroup() {
+    var selectedOption by remember { mutableStateOf("Option 1") }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text(
+            text = "Choose an option:",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        // Option 1
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(vertical = 4.dp)
+        ) {
+            RadioButton(
+                selected = selectedOption == "Option 1",
+                onClick = { selectedOption = "Option 1" }
+            )
+            Text(
+                text = "Option 1",
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(start = 8.dp)
+            )
+        }
+
+        // Option 2
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(vertical = 4.dp)
+        ) {
+            RadioButton(
+                selected = selectedOption == "Option 2",
+                onClick = { selectedOption = "Option 2" }
+            )
+            Text(
+                text = "Option 2",
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(start = 8.dp)
+            )
+        }
+
+        // Display selected option
+        Text(
+            text = "Selected option: $selectedOption",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(top = 12.dp)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun RadioButtonGroupPreview() {
+    MaterialTheme {
+        RadioButtonGroup()
+    }
+}
